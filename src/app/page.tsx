@@ -15,7 +15,7 @@ export default function Home() {
       <div className="mx-auto max-w-7xl space-y-6">
         <DashboardHeader />
         <p className="text-sm text-zinc-400 leading-relaxed">
-          X（旧Twitter）上の都城市を中心とした近隣県域に関する投稿を自動収集し、トピック別に分類・可視化しています。
+          X（旧Twitter）上の都城市を中心とした近隣圏域に関する投稿を自動収集し、トピック別に分類・可視化しています。
           地域の話題やトレンドをリアルタイムに把握するための分析ダッシュボードです。
         </p>
         <div className="space-y-4">
