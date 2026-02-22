@@ -33,9 +33,17 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# data (chrome profile, debug images etc)
+/data/*
+!/data/scraped-posts.json
+
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# test scripts
+test-*.mjs
+reclassify.mjs
