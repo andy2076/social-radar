@@ -88,7 +88,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
   const loadScrapedData = useCallback(async () => {
     try {
-      const res = await fetch("/api/posts");
+      const res = await fetch("/scraped-posts.json");
       const data = await res.json();
 
       if (data.posts && data.posts.length > 0) {
