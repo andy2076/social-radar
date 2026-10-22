@@ -37,6 +37,21 @@ export default function AdminPage() {
           </div>
         </div>
 
+        <div className="rounded-lg border border-zinc-800 p-4 space-y-3">
+          <h2 className="text-base font-medium">候補者SNS監視</h2>
+          <p className="text-muted-foreground text-sm">
+            監視対象（候補者・選挙）の登録、検索語の設定、分類結果の確認・修正を行います。
+          </p>
+          <div className="flex gap-2">
+            <Button size="sm" onClick={() => router.push("/admin/targets")}>
+              監視対象の管理
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => router.push("/monitor")}>
+              監視ダッシュボード
+            </Button>
+          </div>
+        </div>
+
         <ScrapeControls />
 
         <div className="rounded-lg border border-zinc-800 p-4 space-y-3">

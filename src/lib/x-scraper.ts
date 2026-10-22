@@ -71,7 +71,8 @@ export async function openLoginBrowser(): Promise<{
         (url) =>
           url.pathname === "/home" ||
           (!url.pathname.includes("/login") &&
-            !url.pathname.includes("/flow")),
+            !url.pathname.includes("/flow") &&
+            !url.pathname.includes("/onboarding")),
         { timeout: 300000 }
       );
     } catch {
@@ -82,7 +83,9 @@ export async function openLoginBrowser(): Promise<{
 
     const currentUrl = page.url();
     const loggedIn =
-      !currentUrl.includes("/login") && !currentUrl.includes("/flow");
+      !currentUrl.includes("/login") &&
+      !currentUrl.includes("/flow") &&
+      !currentUrl.includes("/onboarding");
 
     if (loggedIn) {
       await fs.writeFile(SESSION_MARKER, new Date().toISOString(), "utf-8");
@@ -233,10 +236,10 @@ export async function scrapeX(
   let context = null;
 
   try {
-    // 同じプロファイルをheadlessで再利用
+    // 同じプロファイルを再利用。X は headless を 403 で拒否するためウィンドウを表示する
     context = await chromium.launchPersistentContext(BROWSER_PROFILE_DIR, {
       channel: "chrome",
-      headless: true,
+      headless: process.env.X_SCRAPE_HEADLESS === "1",
       viewport: { width: 1280, height: 800 },
       locale: "ja-JP",
       args: [
@@ -261,7 +264,8 @@ export async function scrapeX(
 
     if (
       page.url().includes("/login") ||
-      page.url().includes("/flow")
+      page.url().includes("/flow") ||
+      page.url().includes("/onboarding")
     ) {
       await context.close();
       // マーカー削除

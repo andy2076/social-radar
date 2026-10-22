@@ -24,7 +24,9 @@ export default function AdminLoginPage() {
       });
 
       if (res.ok) {
-        router.push("/admin");
+        // 同一オリジン内のパスだけ許可（オープンリダイレクト防止）
+        const next = new URLSearchParams(window.location.search).get("next");
+        router.push(next && next.startsWith("/") && !next.startsWith("//") ? next : "/admin");
       } else {
         const data = await res.json();
         setError(data.error || "認証に失敗しました");

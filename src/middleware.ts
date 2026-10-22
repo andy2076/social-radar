@@ -8,9 +8,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // /admin ページと /api/admin/* API を保護
+  // /admin ・ /monitor（候補者監視）ページと /api/admin/* API を保護
   if (
     pathname.startsWith("/admin") ||
+    pathname.startsWith("/monitor") ||
     pathname.startsWith("/api/admin")
   ) {
     const token = request.cookies.get("admin_token")?.value;
@@ -26,6 +27,7 @@ export function middleware(request: NextRequest) {
       }
       // ページの場合はログインページにリダイレクト
       const loginUrl = new URL("/admin/login", request.url);
+      loginUrl.searchParams.set("next", pathname + request.nextUrl.search);
       return NextResponse.redirect(loginUrl);
     }
   }
@@ -34,5 +36,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*"],
+  matcher: ["/admin/:path*", "/monitor/:path*", "/api/admin/:path*"],
 };
