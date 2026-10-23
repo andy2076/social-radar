@@ -175,7 +175,7 @@ export default function TargetsAdminPage() {
             </p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => router.push("/monitor")}>監視ダッシュボード</Button>
+            <Button variant="outline" size="sm" onClick={() => router.push("/")}>監視ダッシュボード</Button>
             <Button variant="ghost" size="sm" onClick={() => router.push("/admin")}>管理パネルへ</Button>
           </div>
         </div>

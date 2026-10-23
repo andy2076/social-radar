@@ -28,7 +28,7 @@ export default function AdminPage() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => router.push("/")}>
+            <Button variant="outline" size="sm" onClick={() => router.push("/monitor")}>
               ダッシュボードを見る
             </Button>
             <Button variant="ghost" size="sm" onClick={handleLogout}>
@@ -46,7 +46,7 @@ export default function AdminPage() {
             <Button size="sm" onClick={() => router.push("/admin/targets")}>
               監視対象の管理
             </Button>
-            <Button size="sm" variant="outline" onClick={() => router.push("/monitor")}>
+            <Button size="sm" variant="outline" onClick={() => router.push("/")}>
               監視ダッシュボード
             </Button>
           </div>

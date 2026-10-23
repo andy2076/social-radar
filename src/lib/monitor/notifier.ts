@@ -88,5 +88,5 @@ export async function sendAlert(
 
 export function dashboardUrl(targetSlug: string): string | null {
   const base = process.env.APP_BASE_URL;
-  return base ? `${base.replace(/\/$/, "")}/monitor?target=${encodeURIComponent(targetSlug)}` : null;
+  return base ? `${base.replace(/\/$/, "")}/?target=${encodeURIComponent(targetSlug)}` : null;
 }

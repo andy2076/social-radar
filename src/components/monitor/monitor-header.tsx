@@ -41,8 +41,8 @@ export function MonitorHeader({
         </p>
       </div>
       <div className="flex items-center gap-1">
-        {tab("dashboard", "/monitor", "ダッシュボード")}
-        {tab("compare", "/monitor/compare", "候補者比較")}
+        {tab("dashboard", "/", "ダッシュボード")}
+        {tab("compare", "/compare", "候補者比較")}
         {canManage && (
           <Link
             href="/admin/targets"

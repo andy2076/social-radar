@@ -47,7 +47,7 @@ function CompareView() {
     const current = new Set(selected.map((t) => t.slug));
     if (current.has(slug)) current.delete(slug);
     else current.add(slug);
-    router.replace(`/monitor/compare?targets=${[...current].join(",")}`);
+    router.replace(`/compare?targets=${[...current].join(",")}`);
   };
 
   return (

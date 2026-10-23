@@ -28,8 +28,8 @@ export default function AdminLoginPage() {
         // 同一オリジン内のパスだけ許可（オープンリダイレクト防止）
         const next = new URLSearchParams(window.location.search).get("next");
         const safe = next && next.startsWith("/") && !next.startsWith("//") ? next : null;
-        // 閲覧専用は監視画面のみ
-        if (role === "viewer") router.push(safe?.startsWith("/monitor") ? safe : "/monitor");
+        // 閲覧専用は候補者監視（/ と /compare）のみ
+        if (role === "viewer") router.push(safe === "/" || safe?.startsWith("/?") || safe?.startsWith("/compare") ? safe : "/");
         else router.push(safe ?? "/admin");
       } else {
         const data = await res.json();

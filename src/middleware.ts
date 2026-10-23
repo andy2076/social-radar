@@ -9,16 +9,14 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // /admin ・ /monitor（候補者監視）ページと /api/admin/* API を保護
-  if (
-    pathname.startsWith("/admin") ||
-    pathname.startsWith("/monitor") ||
-    pathname.startsWith("/api/admin")
-  ) {
+  // 候補者監視（/ と /compare）・/admin ページと /api/admin/* API を保護。
+  // 地域分析（/monitor）は公開のまま
+  const isCandidatePage = pathname === "/" || pathname.startsWith("/compare");
+  if (isCandidatePage || pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
     const role = getRole(request);
     // 閲覧専用ユーザーは監視画面と、その表示に使う読み取り API だけ
     const viewerAllowed =
-      pathname.startsWith("/monitor") ||
+      isCandidatePage ||
       (request.method === "GET" && VIEWER_APIS.includes(pathname));
     const allowed = role === "admin" || (role === "viewer" && viewerAllowed);
 
@@ -40,5 +38,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/monitor/:path*", "/api/admin/:path*"],
+  matcher: ["/", "/compare/:path*", "/admin/:path*", "/api/admin/:path*"],
 };
