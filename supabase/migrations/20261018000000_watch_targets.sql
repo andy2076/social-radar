@@ -144,3 +144,9 @@ alter table posts enable row level security;
 alter table post_targets enable row level security;
 alter table post_assessments enable row level security;
 alter table alerts enable row level security;
+
+-- 「新しい表を自動で公開」を切ったプロジェクトでも、サーバー（service_role）だけは読み書きできるようにする
+grant usage on schema public to service_role;
+grant all on watch_targets, posts, post_targets, post_assessments, alerts to service_role;
+grant select on post_assessment_current, post_assessment_original, monitor_post_view to service_role;
+grant execute on function claim_unclassified_posts(int, int) to service_role;
