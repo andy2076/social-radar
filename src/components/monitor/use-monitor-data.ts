@@ -14,6 +14,7 @@ export function useMonitorData(targetIds: string[], days: number | null) {
   const [targets, setTargets] = useState<WatchTarget[]>([]);
   const [rows, setRows] = useState<MonitorPostRow[]>([]);
   const [store, setStore] = useState<string>("");
+  const [role, setRole] = useState<"admin" | "viewer" | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const key = targetIds.join(",");
@@ -34,6 +35,7 @@ export function useMonitorData(targetIds: string[], days: number | null) {
       setTargets(data.targets);
       setRows(data.rows);
       setStore(data.store);
+      setRole(data.role);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -45,5 +47,5 @@ export function useMonitorData(targetIds: string[], days: number | null) {
     reload();
   }, [reload]);
 
-  return { targets, rows, store, loading, error, reload };
+  return { targets, rows, store, role, loading, error, reload };
 }

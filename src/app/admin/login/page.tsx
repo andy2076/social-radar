@@ -24,9 +24,13 @@ export default function AdminLoginPage() {
       });
 
       if (res.ok) {
+        const { role } = (await res.json()) as { role?: "admin" | "viewer" };
         // 同一オリジン内のパスだけ許可（オープンリダイレクト防止）
         const next = new URLSearchParams(window.location.search).get("next");
-        router.push(next && next.startsWith("/") && !next.startsWith("//") ? next : "/admin");
+        const safe = next && next.startsWith("/") && !next.startsWith("//") ? next : null;
+        // 閲覧専用は監視画面のみ
+        if (role === "viewer") router.push(safe?.startsWith("/monitor") ? safe : "/monitor");
+        else router.push(safe ?? "/admin");
       } else {
         const data = await res.json();
         setError(data.error || "認証に失敗しました");
@@ -42,7 +46,7 @@ export default function AdminLoginPage() {
     <main className="flex min-h-screen items-center justify-center p-4">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-center text-lg">管理者ログイン</CardTitle>
+          <CardTitle className="text-center text-lg">ログイン</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -56,7 +60,7 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="border-input bg-background mt-1 w-full rounded-md border px-3 py-2 text-sm"
-                placeholder="管理者パスワードを入力"
+                placeholder="パスワードを入力"
                 autoFocus
               />
             </div>

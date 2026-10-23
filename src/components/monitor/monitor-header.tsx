@@ -3,7 +3,16 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-export function MonitorHeader({ active, store }: { active: "dashboard" | "compare"; store?: string }) {
+export function MonitorHeader({
+  active,
+  store,
+  canManage = false,
+}: {
+  active: "dashboard" | "compare";
+  store?: string;
+  /** 管理者のみ「監視対象の管理」を出す */
+  canManage?: boolean;
+}) {
   const tab = (key: typeof active, href: string, label: string) => (
     <Link
       href={href}
@@ -34,12 +43,14 @@ export function MonitorHeader({ active, store }: { active: "dashboard" | "compar
       <div className="flex items-center gap-1">
         {tab("dashboard", "/monitor", "ダッシュボード")}
         {tab("compare", "/monitor/compare", "候補者比較")}
-        <Link
-          href="/admin/targets"
-          className="text-muted-foreground hover:text-foreground ml-2 rounded-md border border-zinc-800 px-3 py-1.5 text-xs transition-colors hover:border-zinc-600"
-        >
-          監視対象の管理
-        </Link>
+        {canManage && (
+          <Link
+            href="/admin/targets"
+            className="text-muted-foreground hover:text-foreground ml-2 rounded-md border border-zinc-800 px-3 py-1.5 text-xs transition-colors hover:border-zinc-600"
+          >
+            監視対象の管理
+          </Link>
+        )}
       </div>
     </div>
   );

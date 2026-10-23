@@ -33,7 +33,16 @@ function RiskBadge({ risk }: { risk: Risk | null }) {
   return <span className={`rounded px-1.5 py-0.5 text-xs ${cls}`}>{RISK_LABELS[risk]}</span>;
 }
 
-export function MonitorPostsTable({ rows, onChanged }: { rows: MonitorPostRow[]; onChanged: () => void }) {
+export function MonitorPostsTable({
+  rows,
+  onChanged,
+  readOnly = false,
+}: {
+  rows: MonitorPostRow[];
+  onChanged: () => void;
+  /** 閲覧専用（判定の修正・再分類をさせない） */
+  readOnly?: boolean;
+}) {
   const [stance, setStance] = useState<string>("");
   const [risk, setRisk] = useState<string>("");
   const [topic, setTopic] = useState<string>("");
@@ -111,7 +120,8 @@ export function MonitorPostsTable({ rows, onChanged }: { rows: MonitorPostRow[];
                 <PostRow
                   key={`${r.target_id}:${r.id}`}
                   row={r}
-                  editing={editing === r.id}
+                  editing={!readOnly && editing === r.id}
+                  readOnly={readOnly}
                   onEdit={() => setEditing(editing === r.id ? null : r.id)}
                   onSaved={() => { setEditing(null); onChanged(); }}
                 />
@@ -138,11 +148,13 @@ export function MonitorPostsTable({ rows, onChanged }: { rows: MonitorPostRow[];
 function PostRow({
   row,
   editing,
+  readOnly,
   onEdit,
   onSaved,
 }: {
   row: MonitorPostRow;
   editing: boolean;
+  readOnly: boolean;
   onEdit: () => void;
   onSaved: () => void;
 }) {
@@ -179,7 +191,7 @@ function PostRow({
         <td className="whitespace-nowrap px-3 py-2 text-right text-zinc-400 tabular-nums">{formatCount(row.likes)}</td>
         <td className="whitespace-nowrap px-3 py-2 text-right text-zinc-400">{row.retweets}</td>
         <td className="whitespace-nowrap px-3 py-2 text-right">
-          <Button variant="ghost" size="xs" onClick={onEdit}>{editing ? "閉じる" : "修正"}</Button>
+          {!readOnly && <Button variant="ghost" size="xs" onClick={onEdit}>{editing ? "閉じる" : "修正"}</Button>}
         </td>
       </tr>
       {editing && (

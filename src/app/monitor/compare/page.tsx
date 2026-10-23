@@ -35,7 +35,7 @@ function CompareView() {
     return list;
   }, [candidates, params]);
 
-  const { rows, store, error } = useMonitorData(selected.map((t) => t.id), days);
+  const { rows, store, role, error } = useMonitorData(selected.map((t) => t.id), days);
   const byTarget = useMemo(() => {
     const m = new Map<string, MonitorPostRow[]>();
     // 本人の投稿は分類しないので比較から外す
@@ -53,7 +53,7 @@ function CompareView() {
   return (
     <main className="min-h-screen p-4 md:p-8">
       <div className="mx-auto max-w-7xl space-y-6">
-        <MonitorHeader active="compare" store={store} />
+        <MonitorHeader active="compare" store={store} canManage={role === "admin"} />
 
         <div className="flex flex-wrap items-center gap-3">
           {candidates.map((t) => (

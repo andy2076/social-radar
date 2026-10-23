@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getRole, VIEWER_APIS } from "@/lib/auth-role";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -14,16 +15,19 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/monitor") ||
     pathname.startsWith("/api/admin")
   ) {
-    const token = request.cookies.get("admin_token")?.value;
-    const adminPassword = process.env.ADMIN_PASSWORD || "admin";
+    const role = getRole(request);
+    // 閲覧専用ユーザーは監視画面と、その表示に使う読み取り API だけ
+    const viewerAllowed =
+      pathname.startsWith("/monitor") ||
+      (request.method === "GET" && VIEWER_APIS.includes(pathname));
+    const allowed = role === "admin" || (role === "viewer" && viewerAllowed);
 
-    if (token !== adminPassword) {
-      // API の場合は 401 を返す
+    if (!allowed) {
+      // API の場合は 401 / 403 を返す
       if (pathname.startsWith("/api/")) {
-        return NextResponse.json(
-          { error: "認証が必要です" },
-          { status: 401 }
-        );
+        return role
+          ? NextResponse.json({ error: "閲覧専用のアカウントでは操作できません" }, { status: 403 })
+          : NextResponse.json({ error: "認証が必要です" }, { status: 401 });
       }
       // ページの場合はログインページにリダイレクト
       const loginUrl = new URL("/admin/login", request.url);

@@ -62,7 +62,7 @@ function MonitorDashboard() {
     const slug = params.get("target");
     return targets.find((t) => t.slug === slug) ?? targets.find((t) => t.kind === "candidate") ?? targets[0];
   }, [targets, params]);
-  const { rows: allRows, store, loading, error, reload } = useMonitorData(selected ? [selected.id] : [], days);
+  const { rows: allRows, store, role, loading, error, reload } = useMonitorData(selected ? [selected.id] : [], days);
   // 本人の投稿は分類しないので、言及・リプライの集計からは外す
   const rows = useMemo(() => allRows.filter((r) => r.post_kind !== "own"), [allRows]);
 
@@ -102,14 +102,16 @@ function MonitorDashboard() {
   return (
     <main className="min-h-screen p-4 md:p-8">
       <div className="mx-auto max-w-7xl space-y-6">
-        <MonitorHeader active="dashboard" store={store} />
+        <MonitorHeader active="dashboard" store={store} canManage={role === "admin"} />
 
         <div className="flex flex-wrap items-center gap-3">
           <TargetSelect targets={targets} value={selected} onChange={(slug) => router.replace(`/monitor?target=${slug}`)} />
           <RangeSelect days={days} onChange={setDays} options={RANGE_OPTIONS} />
-          <Button size="sm" variant="outline" onClick={runNow} disabled={running}>
-            {running ? "実行中..." : "今すぐ収集・分類"}
-          </Button>
+          {role === "admin" && (
+            <Button size="sm" variant="outline" onClick={runNow} disabled={running}>
+              {running ? "実行中..." : "今すぐ収集・分類"}
+            </Button>
+          )}
           {runMessage && <span className="text-muted-foreground text-xs">{runMessage}</span>}
         </div>
 
@@ -134,7 +136,7 @@ function MonitorDashboard() {
         {loading && rows.length === 0 ? (
           <p className="text-muted-foreground text-sm">読み込み中...</p>
         ) : (
-          <MonitorPostsTable rows={rows} onChanged={reload} />
+          <MonitorPostsTable rows={rows} onChanged={reload} readOnly={role !== "admin"} />
         )}
       </div>
     </main>
